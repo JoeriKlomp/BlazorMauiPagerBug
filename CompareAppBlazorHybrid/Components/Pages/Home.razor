@@ -1,0 +1,30 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+<ul>
+    @foreach (var item in _testToShow)
+    {
+        <li>@item</li>
+    }
+</ul>
+
+<RadzenPager ShowPagingSummary=true Count=@(_test.Count()) PageSize=10 PageNumbersCount=1 PageChanged="PageChanged" />
+
+@code {
+    private IEnumerable<int> _test = Enumerable.Range(1, 100);
+    private IEnumerable<int> _testToShow = [];
+
+    protected override void OnInitialized()
+    {
+        _testToShow = _test.Take(10);
+    }
+
+    private void PageChanged(PagerEventArgs args)
+    {
+        _testToShow = _test.Skip(args.Skip).Take(args.Top);
+        StateHasChanged();
+    }
+}
